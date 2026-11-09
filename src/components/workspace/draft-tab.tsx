@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { useQueryClient } from "@tanstack/react-query";
 import {
     AlertCircleIcon,
     CheckIcon,
@@ -323,6 +324,7 @@ export function DraftTab({
     latestApplication = null,
     onGenerate,
 }: DraftTabProps) {
+    const queryClient = useQueryClient();
     const [draftState, setDraftState] = useState<PersistedDraftState>(() =>
         loadPersistedDraftState(job.id, job.questions, latestApplication)
     );
@@ -462,6 +464,9 @@ export function DraftTab({
                 ),
             }));
             setIsDirty(false);
+            void queryClient.invalidateQueries({
+                queryKey: ["applications-board"],
+            });
 
             if (onGenerate) {
                 onGenerate(payload);

@@ -6,8 +6,10 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
+    "build:landing": "vite build --config vite.landing.config.ts",
     "lint": "oxlint",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "preview:landing": "vite preview --config vite.landing.config.ts"
   },
   "dependencies": {
     "@radix-ui/react-avatar": "^1.1.10",

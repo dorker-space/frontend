@@ -253,6 +253,9 @@ export function ApplicationWorkspacePage() {
                 };
             });
             void queryClient.invalidateQueries({ queryKey: ["matches"] });
+            void queryClient.invalidateQueries({
+                queryKey: ["applications-board"],
+            });
             toast.success(
                 `Application status updated to ${formatPipelineStatus(confirmed)}`
             );

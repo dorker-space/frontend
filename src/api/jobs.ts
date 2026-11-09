@@ -67,6 +67,10 @@ export class JobsApi extends BaseApiClient {
         return this.jobCache.get(id);
     }
 
+    public clearCache(): void {
+        this.jobCache.clear();
+    }
+
     public async scrapeExternal(url: string): Promise<{
         job: Job;
         match: WorkspaceMatch;

@@ -168,6 +168,7 @@ export interface ApiMatchResponse {
     analytics: ApiMatchAnalytics | null;
     rejection_reason: string | null;
     created_at: string;
+    updated_at?: string | null;
 }
 
 export interface ApiMatchesResponse {
@@ -278,6 +279,7 @@ export interface WorkspaceMatch {
     hasAnalytics: boolean;
     rejectionReason: string | null;
     createdAt: string;
+    updatedAt: string;
 }
 
 export interface MatchWithJob {

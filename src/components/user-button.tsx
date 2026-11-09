@@ -19,7 +19,7 @@ import { SidebarMenuButton } from "@/components/ui/sidebar";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { useTheme } from "@/components/providers/theme-provider";
-import { fetchCandidateProfile } from "@/lib/api";
+import { profileApi } from "@/api/profile";
 
 export function UserButton({
     variant = "sidebar",
@@ -32,7 +32,8 @@ export function UserButton({
 
     const { data: profile } = useQuery({
         queryKey: ["profile"],
-        queryFn: fetchCandidateProfile,
+        queryFn: () => profileApi.get(),
+        retry: false,
     });
 
     useEffect(() => {
@@ -47,10 +48,8 @@ export function UserButton({
         return () => document.removeEventListener("keydown", handleKeyDown);
     }, [toggleTheme]);
 
-    const name = profile
-        ? `${profile.firstName} ${profile.lastName}`.trim()
-        : "Serafym Engineer";
-    const email = profile?.email || "serafym@dorker.space";
+    const name = profile?.name || [profile?.first_name, profile?.last_name].filter(Boolean).join(" ") || "Your profile";
+    const email = profile?.email || "Email not provided";
     const initials = name
         .split(" ")
         .map((n) => n[0])

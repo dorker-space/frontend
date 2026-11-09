@@ -19,7 +19,7 @@ export function mapApiJobToJob(dto: ApiJobResponse): Job {
         description: dto.description,
         url: dto.url,
         applyUrl: dto.apply_url,
-        link: dto.url || dto.apply_url,
+        link: dto.url || dto.apply_url || "",
         atsType: dto.ats_type,
         employmentType: dto.employment_type ?? undefined,
         employment_type: dto.employment_type ?? undefined,
@@ -48,6 +48,7 @@ export function mapApiMatchToWorkspaceMatch(
         hasAnalytics: dto.analytics !== null,
         rejectionReason: dto.rejection_reason,
         createdAt: dto.created_at,
+        updatedAt: dto.updated_at ?? dto.created_at,
     };
 }
 

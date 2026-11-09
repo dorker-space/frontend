@@ -35,6 +35,7 @@ export function createMockWorkspaceData(job: Job): WorkspaceData {
             hasAnalytics: true,
             rejectionReason: null,
             createdAt: new Date().toISOString(),
+            updatedAt: new Date().toISOString(),
         },
         discussionState: "not_started",
         messages: [],

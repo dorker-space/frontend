@@ -1,17 +1,15 @@
 import {
     Application,
     Job,
-    ProfileData,
     SavedJob,
 } from "@/lib/types";
+import { shouldUseSyntheticApi } from "@/lib/app-mode";
 import {
     getStoredApplications,
     getStoredJobs,
-    getStoredProfile,
     getStoredSavedJobs,
     saveStoredJob,
     setStoredApplications,
-    setStoredProfile,
     setStoredSavedJobs,
 } from "@/lib/mock-store";
 
@@ -40,21 +38,23 @@ export async function fetchJobsList(
     const locationFilter = (params.location ?? "").trim().toLowerCase();
     const companyFilter = (params.company ?? "").trim().toLowerCase();
 
-    try {
-        const search = new URLSearchParams({
-            page: String(page),
-            limit: String(pageSize),
-        });
-        if (query) search.set("q", query);
-        if (locationFilter) search.set("location", locationFilter);
-        if (companyFilter) search.set("company", companyFilter);
+    if (!shouldUseSyntheticApi()) {
+        try {
+            const search = new URLSearchParams({
+                page: String(page),
+                limit: String(pageSize),
+            });
+            if (query) search.set("q", query);
+            if (locationFilter) search.set("location", locationFilter);
+            if (companyFilter) search.set("company", companyFilter);
 
-        const response = await fetch(`/api/jobs/external?${search.toString()}`);
-        if (response.ok) {
-            return (await response.json()) as JobsResponse;
+            const response = await fetch(`/api/jobs/external?${search.toString()}`);
+            if (response.ok) {
+                return (await response.json()) as JobsResponse;
+            }
+        } catch {
+            // Python backend not running or endpoint not yet mounted; use local store
         }
-    } catch {
-        // Python backend not running or endpoint not yet mounted; use local store
     }
 
     const allJobs = getStoredJobs();
@@ -89,16 +89,18 @@ export async function fetchJobsList(
 }
 
 export async function fetchJobById(jobId: string): Promise<Job> {
-    try {
-        const response = await fetch(
-            `/api/jobs/${encodeURIComponent(jobId)}`
-        );
-        if (response.ok) {
-            const data = (await response.json()) as { job?: Job } & Job;
-            return data.job ?? data;
+    if (!shouldUseSyntheticApi()) {
+        try {
+            const response = await fetch(
+                `/api/jobs/${encodeURIComponent(jobId)}`
+            );
+            if (response.ok) {
+                const data = (await response.json()) as { job?: Job } & Job;
+                return data.job ?? data;
+            }
+        } catch {
+            // Fallback to local store
         }
-    } catch {
-        // Fallback to local store
     }
 
     const allJobs = getStoredJobs();
@@ -126,16 +128,18 @@ export async function fetchJobById(jobId: string): Promise<Job> {
 }
 
 export async function fetchSavedJobsList(): Promise<SavedJob[]> {
-    try {
-        const response = await fetch("/api/saved-jobs");
-        if (response.ok) {
-            const data = (await response.json()) as { savedJobs?: SavedJob[] };
-            if (Array.isArray(data.savedJobs)) {
-                return data.savedJobs;
+    if (!shouldUseSyntheticApi()) {
+        try {
+            const response = await fetch("/api/saved-jobs");
+            if (response.ok) {
+                const data = (await response.json()) as { savedJobs?: SavedJob[] };
+                if (Array.isArray(data.savedJobs)) {
+                    return data.savedJobs;
+                }
             }
+        } catch {
+            // Fallback to local store
         }
-    } catch {
-        // Fallback to local store
     }
     return getStoredSavedJobs();
 }
@@ -208,39 +212,3 @@ export async function deleteApplicationItem(applicationId: string): Promise<void
     setStoredApplications(current.filter((app) => app.id !== applicationId));
 }
 
-export async function fetchCandidateProfile(): Promise<ProfileData> {
-    try {
-        const response = await fetch("/api/profile");
-        if (response.ok) {
-            const data = (await response.json()) as { profile?: ProfileData };
-            if (data.profile) {
-                return data.profile;
-            }
-        }
-    } catch {
-        // Fallback to local store
-    }
-    return getStoredProfile();
-}
-
-export async function saveCandidateProfile(
-    profile: ProfileData
-): Promise<ProfileData> {
-    try {
-        const response = await fetch("/api/profile", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(profile),
-        });
-        if (response.ok) {
-            const data = (await response.json()) as { profile?: ProfileData };
-            if (data.profile) {
-                setStoredProfile(data.profile);
-                return data.profile;
-            }
-        }
-    } catch {
-        // Persist in local store
-    }
-    return setStoredProfile(profile);
-}

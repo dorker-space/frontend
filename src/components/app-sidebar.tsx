@@ -6,6 +6,7 @@ import {
     SearchIcon,
     SearchCheck,
     UserIcon,
+    FolderOpenIcon,
 } from "lucide-react";
 
 import { NavJobs } from "@/components/nav/jobs";
@@ -17,7 +18,7 @@ import {
     SidebarFooter,
     SidebarHeader,
 } from "@/components/ui/sidebar";
-import {Dorker, DorkerFullLogo} from "@/components/logo";
+import {DorkerFullLogo} from "@/components/logo";
 
 const navigationData = {
     jobCategories: [
@@ -40,6 +41,11 @@ const navigationData = {
             title: "Saved Jobs",
             url: "/saved",
             icon: BookmarkIcon,
+        },
+        {
+            title: "Dossier",
+            url: "/dossier",
+            icon: FolderOpenIcon,
         },
         {
             title: "Profile & Preferences",

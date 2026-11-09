@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="64 112 293 300" role="img" aria-labelledby="title"><title id="title">Dorker icon</title>
+<defs>
+ <linearGradient id="navy" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#041942"/><stop offset=".55" stop-color="#00133f"/><stop offset="1" stop-color="#061c50"/></linearGradient>
+ <linearGradient id="back" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#c8e5ff"/><stop offset="1" stop-color="#b5d8ff"/></linearGradient>
+ <linearGradient id="middle" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#4aa7fa"/><stop offset="1" stop-color="#3095fa"/></linearGradient>
+ <linearGradient id="blue" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#0063ff"/><stop offset="1" stop-color="#0054f6"/></linearGradient>
+ <linearGradient id="paper" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#fff"/><stop offset="1" stop-color="#f5f8fb"/></linearGradient>
+ <linearGradient id="line" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#a8afc1"/><stop offset="1" stop-color="#9da6bb"/></linearGradient>
+</defs>
+<g id="icon">
+ <path fill="url(#navy)" d="M86 128 H212 C286 128 341 181 341 261 C341 341 287 395 212 395 H108 Q101 395 101 388 V318 L79 207 V136 Q79 128 86 128 Z"/>
+ <path fill="url(#back)" d="M92 191 L171 163 C180 160 186 165 186 176 V290 Q186 302 175 306 L103 328 L87 317 Q80 313 80 304 V207 Q80 195 92 191 Z"/>
+ <path fill="url(#middle)" d="M117 197 L193 177 C204 173 211 179 211 189 V308 Q211 322 199 325 L119 343 Q102 347 102 331 V216 Q102 201 117 197 Z"/>
+ <path fill="url(#blue)" d="M139 215 L229 191 Q243 187 243 202 V331 Q243 343 230 346 L141 369 Q124 373 124 356 V234 Q124 220 139 215 Z"/>
+ <path fill="url(#paper)" d="M158 243 L256 222 Q271 219 271 233 V318 C271 339 261 353 242 359 L160 381 Q145 385 145 372 V261 Q145 247 158 243 Z"/>
+ <path fill="none" stroke="url(#line)" stroke-width="17" stroke-linecap="round" d="M173.5 271.5 L243 255 M173.5 303.5 L243 287"/>
+ <path fill="none" stroke="#f9fcff" stroke-width="7.5" stroke-linecap="round" d="M271 300 C283 294 290 279 290 261 V218"/>
+ <circle cx="289" cy="203" r="18.5" fill="#f9fcff"/>
+ <circle cx="289" cy="203" r="11.7" fill="url(#blue)"/>
+ <path fill="none" stroke="url(#blue)" stroke-width="7" stroke-linecap="round" d="M194 348 C214 345 224 338 234 325 C244 311 255 309 268 305"/>
+ <circle cx="171.5" cy="352.5" r="13.5" fill="url(#blue)"/>
+</g>
+</svg>

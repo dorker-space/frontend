@@ -71,6 +71,44 @@ export class MatchesApi extends BaseApiClient {
         };
     }
 
+    public async listApplications(
+        params: ListMatchesParams = {}
+    ): Promise<MatchesPageResult> {
+        const limit = params.limit ?? 50;
+        const offset = params.offset ?? 0;
+
+        const response = await this.request<ApiMatchesResponse>(
+            "/api/matches/applications",
+            {
+                method: "GET",
+                params: {
+                    limit,
+                    offset,
+                    tiers:
+                        params.tiers && params.tiers.length > 0
+                            ? params.tiers
+                            : undefined,
+                    pipeline_status:
+                        params.pipelineStatus &&
+                        params.pipelineStatus.length > 0
+                            ? params.pipelineStatus
+                            : undefined,
+                },
+            }
+        );
+
+        const matches = response.matches.map((dto) =>
+            this.cacheMatch(mapApiMatchToWorkspaceMatch(dto))
+        );
+
+        return {
+            matches,
+            total: response.total,
+            limit: response.limit,
+            offset: response.offset,
+        };
+    }
+
     public async getCounts(
         pipelineStatus?: WorkspaceStatus[]
     ): Promise<Record<SuitabilityTier, number>> {
@@ -105,6 +143,11 @@ export class MatchesApi extends BaseApiClient {
 
     public getCached(id: string): WorkspaceMatch | undefined {
         return this.matchCache.get(id);
+    }
+
+    public clearCache(): void {
+        this.matchCache.clear();
+        this.matchIdByJobId.clear();
     }
 
     public cache(match: WorkspaceMatch): WorkspaceMatch {
@@ -168,6 +211,7 @@ export class MatchesApi extends BaseApiClient {
             this.matchCache.set(id, {
                 ...existing,
                 pipelineStatus: response.status,
+                updatedAt: new Date().toISOString(),
             });
         }
         return response.status;

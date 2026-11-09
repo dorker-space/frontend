@@ -1,3 +1,9 @@
+import {
+    handleSyntheticNdjsonStream,
+    handleSyntheticRequest,
+} from "@/api/synthetic-adapter";
+import { shouldUseSyntheticApi } from "@/lib/app-mode";
+
 export type QueryParamValue =
     | string
     | number
@@ -111,6 +117,10 @@ export class BaseApiClient {
         path: string,
         options: RequestOptions = {}
     ): Promise<T> {
+        if (shouldUseSyntheticApi()) {
+            return handleSyntheticRequest<T>(path, options);
+        }
+
         const { params, body, headers, ...restInit } = options;
         const url = this.buildUrl(path, params);
 
@@ -141,6 +151,10 @@ export class BaseApiClient {
         options: RequestOptions,
         onEvent: (event: TEvent) => void
     ): Promise<void> {
+        if (shouldUseSyntheticApi()) {
+            return handleSyntheticNdjsonStream<TEvent>(path, options, onEvent);
+        }
+
         const { params, body, headers, ...restInit } = options;
         const url = this.buildUrl(path, params);
 

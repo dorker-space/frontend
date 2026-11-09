@@ -541,6 +541,9 @@ export function MatchesPage() {
                     queryKey: ["matches"],
                     refetchType: "inactive",
                 });
+                void queryClient.invalidateQueries({
+                    queryKey: ["applications-board"],
+                });
 
                 const label = formatPipelineStatus(confirmed);
                 const message = jobTitle

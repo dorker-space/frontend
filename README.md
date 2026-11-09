@@ -2,6 +2,13 @@
 
 React + TypeScript + Vite client for the local Dorker API.
 
+The same frontend build powers three experiences via hostname (or `?mode=landing|example|app` on `localhost`):
+- `dorker.space` (`/` on `localhost`): Public landing page with an interactive preview of the real Dorker UI and the engineering story behind the pipeline.
+- `example.dorker.space` (`?mode=example` on `localhost`): The complete real Dorker application fed by an in-memory/`sessionStorage` synthetic API adapter at `BaseApiClient`—no backend or registration required.
+- `app.dorker.space` (`?mode=app` on `localhost`): The live Dorker workspace connected to the `/api` backend for approved beta users.
+
+See [docs/landing-page.md](docs/landing-page.md) for architecture decisions, synthetic data design, and hosting notes.
+
 ## Development
 
 Start the backend from the Python repository in its project environment:

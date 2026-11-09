@@ -1,43 +1,87 @@
-import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
+import { lazy, Suspense, useEffect, useState } from "react";
+import {
+    BrowserRouter,
+    Navigate,
+    Route,
+    Routes,
+    useLocation,
+} from "react-router-dom";
+import { ExampleModeBanner } from "@/components/landing/example-mode-banner";
 import { ThemeProvider } from "@/components/providers/theme-provider";
-import { QueryProvider } from "@/components/providers/query-provider";
-import { DashboardLayout } from "@/layouts/dashboard-layout";
-import { JobsPage } from "@/pages/jobs-page";
-import { ApplicationWorkspacePage } from "@/pages/application-workspace-page";
-import { MatchesPage } from "@/pages/matches-page.tsx";
-import { SavedJobsPage } from "@/pages/saved-jobs-page";
-import { ProfilePage } from "@/pages/profile-page";
+import {
+    type AppMode,
+    onAppModeChange,
+    resolveAppMode,
+} from "@/lib/app-mode";
+
+const HomePage = lazy(() => import("@/pages/home-page"));
+const DashboardRoutes = lazy(() => import("@/routes/dashboard-routes"));
+
+function AppModeRouter() {
+    // Subscribe to location so route/query changes re-evaluate resolveAppMode()
+    useLocation();
+    const [, setExternalModeTick] = useState<AppMode>(() => resolveAppMode());
+
+    useEffect(() => {
+        return onAppModeChange((nextMode) => {
+            setExternalModeTick(nextMode);
+        });
+    }, []);
+
+    const mode = resolveAppMode();
+
+    if (mode === "landing") {
+        return (
+            <Routes>
+                <Route path="/" element={<HomePage />} />
+                <Route
+                    path="/example"
+                    element={<Navigate to="/matches?mode=example" replace />}
+                />
+                <Route path="*" element={<Navigate to="/" replace />} />
+            </Routes>
+        );
+    }
+
+    if (mode === "example") {
+        return (
+            <>
+                <ExampleModeBanner />
+                <Routes>
+                    <Route
+                        path="/"
+                        element={<Navigate to="/matches" replace />}
+                    />
+                    <Route
+                        path="/example"
+                        element={<Navigate to="/matches" replace />}
+                    />
+                    <Route path="/*" element={<DashboardRoutes />} />
+                </Routes>
+            </>
+        );
+    }
+
+    return <DashboardRoutes />;
+}
 
 export default function App() {
     return (
         <ThemeProvider>
-            <QueryProvider>
-                <BrowserRouter>
-                    <Routes>
-                        <Route element={<DashboardLayout />}>
-                            <Route
-                                index
-                                element={<Navigate to="/jobs" replace />}
-                            />
-                            <Route path="/jobs" element={<JobsPage />} />
-                            <Route
-                                path="/application/:id"
-                                element={<ApplicationWorkspacePage />}
-                            />
-                            <Route
-                                path="/matches"
-                                element={<MatchesPage />}
-                            />
-                            <Route path="/saved" element={<SavedJobsPage />} />
-                            <Route path="/profile" element={<ProfilePage />} />
-                            <Route
-                                path="*"
-                                element={<Navigate to="/jobs" replace />}
-                            />
-                        </Route>
-                    </Routes>
-                </BrowserRouter>
-            </QueryProvider>
+            <BrowserRouter>
+                <Suspense
+                    fallback={
+                        <div
+                            className="flex min-h-screen items-center justify-center text-sm text-muted-foreground"
+                            role="status"
+                        >
+                            Loading Dorker…
+                        </div>
+                    }
+                >
+                    <AppModeRouter />
+                </Suspense>
+            </BrowserRouter>
         </ThemeProvider>
     );
 }

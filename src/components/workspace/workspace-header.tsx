@@ -100,7 +100,7 @@ export function WorkspaceHeader({
                         asChild
                         className="shrink-0"
                     >
-                        <Link to="/applications">
+                        <Link to="/matches">
                             <ArrowLeftIcon className="size-4 mr-1.5" />
                             Back
                         </Link>
